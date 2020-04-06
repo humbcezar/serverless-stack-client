@@ -1,11 +1,12 @@
 export default {
+  MAX_ATTACHMENT_SIZE: 5000000,
   s3: {
     REGION: "us-east-2",
     BUCKET: "betoncios-notes-apps-uploads"
   },
   apiGateway: {
     REGION: "us-east-2",
-    URL: "https://6h7xe9zo36.execute-api.us-east-2.amazonaws.com/prod/"
+    URL: "https://6h7xe9zo36.execute-api.us-east-2.amazonaws.com/prod"
   },
   cognito: {
     REGION: "us-east-2",
