@@ -5,8 +5,8 @@ import { Link, withRouter } from "react-router-dom";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Auth } from "aws-amplify";
-
-
+import { onError } from "./libs/errorLib";
+import { AppContext } from "./libs/contextLib";
 
 function App(props) {
   const [isAuthenticating, setIsAuthenticating] = useState(true);
@@ -23,7 +23,7 @@ function App(props) {
     }
     catch(e) {
       if (e !== 'No current user') {
-        alert(e);
+        onError(e);
       }
     }
   
@@ -37,20 +37,26 @@ function App(props) {
   }
 
   return (
-    !isAuthenticating &&
-    <div className="App container">
-      <Navbar fluid collapseOnSelect>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <Link to="/">Scratch</Link>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav pullRight>
-            {isAuthenticated
-              ? <NavItem onClick={handleLogout}>Logout</NavItem>
-              : <>
+    !isAuthenticating && (
+      <div className="App container">
+        <Navbar fluid collapseOnSelect>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <Link to="/">Scratch</Link>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            <Nav pullRight>
+              {isAuthenticated ? (
+                <>
+                  <LinkContainer to="/settings">
+                    <NavItem>Settings</NavItem>
+                  </LinkContainer>
+                  <NavItem onClick={handleLogout}>Logout</NavItem>
+                </>
+              ) : (
+                <>
                   <LinkContainer to="/signup">
                     <NavItem>Signup</NavItem>
                   </LinkContainer>
@@ -58,12 +64,17 @@ function App(props) {
                     <NavItem>Login</NavItem>
                   </LinkContainer>
                 </>
-            }
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-      <Routes appProps={{ isAuthenticated, userHasAuthenticated }} />
-    </div>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <AppContext.Provider
+          value={{ isAuthenticated, userHasAuthenticated }}
+        >
+          <Routes />
+        </AppContext.Provider>
+      </div>
+    )
   );
 
 }

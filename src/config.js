@@ -1,5 +1,6 @@
 export default {
   MAX_ATTACHMENT_SIZE: 5000000,
+  STRIPE_KEY: "pk_test_gHNDOdkJ7PO8VfK1dajtm9qR00n969Nr1J",
   s3: {
     REGION: "us-east-2",
     BUCKET: "betoncios-notes-apps-uploads"

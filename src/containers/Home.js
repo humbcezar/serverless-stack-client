@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
+import { useAppContext } from "../libs/contextLib";
+import { onError } from "../libs/errorLib";
 import "./Home.css";
 import { API } from "aws-amplify";
-import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
-export default function Home(props) {
+export default function Home() {
   const [notes, setNotes] = useState([]);
+  const { isAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function onLoad() {
-      if (!props.isAuthenticated) {
+      if (!isAuthenticated) {
         return;
       }
   
@@ -18,14 +21,14 @@ export default function Home(props) {
         const notes = await loadNotes();
         setNotes(notes);
       } catch (e) {
-        alert(e);
+        onError(e);
       }
   
       setIsLoading(false);
     }
   
     onLoad();
-  }, [props.isAuthenticated]);
+  }, [isAuthenticated]);
   
   function loadNotes() {
     return API.get("notes", "/notes");
@@ -73,7 +76,7 @@ export default function Home(props) {
 
   return (
     <div className="Home">
-      {props.isAuthenticated ? renderNotes() : renderLander()}
+      {isAuthenticated ? renderNotes() : renderLander()}
     </div>
   );
 }
